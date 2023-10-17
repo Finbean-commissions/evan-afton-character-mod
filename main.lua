@@ -1,6 +1,6 @@
 ----Welcome to the "main.lua" file! Here is where all the magic happens, everything from functions to callbacks are dOne_Character.
 --Startup
-local mod = RegisterMod("Commission Template - Character + Tainted", 1)
+local mod = RegisterMod("Evan & Wolliam Afton Character Mod", 1)
 local game = Game()
 local rng = RNG()
 
