@@ -24,7 +24,7 @@ local function addCharacter(name, isTainted) -- This is the function used to det
 	}
 	return character
 end
-mod.One_Character = addCharacter("One", false)
+mod.EvanAfton_Character = addCharacter("Evan Afton", false)
 mod.Two_Character = addCharacter("Two", true)
 
 function mod:evalCache(player, cacheFlag) -- this function applies all the stats the character gains/loses on a new run.
@@ -59,7 +59,7 @@ function mod:evalCache(player, cacheFlag) -- this function applies all the stats
 			end
 		end
 	end
-	mod.One_Stats = addStats("One", 0, 0, 0, 0, 0, 0, Color(1, 1, 1, 1.0, 0, 0, 0), false, TearFlags.TEAR_NORMAL)
+	mod.EvanAfton_Stats = addStats("Evan Afton", 0, 0, 0, 0, 0, 0, Color(1, 1, 1, 1.0, 0, 0, 0), false, TearFlags.TEAR_NORMAL)
 	mod.Two_Stats = addStats("Two", 0, 0, 0, 0, 0, 0, Color(1, 1, 1, 1.0, 0, 0, 0), false, TearFlags.TEAR_NORMAL)
 end
 mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE,mod.evalCache)
