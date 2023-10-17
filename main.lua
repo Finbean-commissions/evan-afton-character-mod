@@ -25,7 +25,7 @@ local function addCharacter(name, isTainted) -- This is the function used to det
 	return character
 end
 mod.EvanAfton_Character = addCharacter("Evan Afton", false)
-mod.Two_Character = addCharacter("Two", true)
+mod.Two_Character = addCharacter("William Afton", true)
 
 function mod:evalCache(player, cacheFlag) -- this function applies all the stats the character gains/loses on a new run.
 	local function addStats(name, speed, tears, damage, range, shotspeed, luck, tearcolor, flying, tearflag) -- This is the function used to determine the stats of your character, you can simply leave it as you will use it later!
@@ -60,7 +60,7 @@ function mod:evalCache(player, cacheFlag) -- this function applies all the stats
 		end
 	end
 	mod.EvanAfton_Stats = addStats("Evan Afton", 0, 0, 0, 0, 0, 0, Color(1, 1, 1, 1.0, 0, 0, 0), false, TearFlags.TEAR_NORMAL)
-	mod.Two_Stats = addStats("Two", 0, 0, 0, 0, 0, 0, Color(1, 1, 1, 1.0, 0, 0, 0), false, TearFlags.TEAR_NORMAL)
+	mod.Two_Stats = addStats("William Afton", 0, 0, 0, 0, 0, 0, Color(1, 1, 1, 1.0, 0, 0, 0), false, TearFlags.TEAR_NORMAL)
 end
 mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE,mod.evalCache)
 
