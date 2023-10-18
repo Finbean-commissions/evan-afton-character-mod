@@ -20,12 +20,11 @@ local function addCharacter(name, isTainted) -- This is the function used to det
 	local character = { -- these stats are added to Isaac's base stats.
 		NAME = name,
 		ID = Isaac.GetPlayerTypeByName(name, isTainted), -- string, boolean
-		Costume_ID = Isaac.GetCostumeIdByPath("gfx/characters/"..name.."-head.anm2"),
 	}
 	return character
 end
 mod.EvanAfton_Character = addCharacter("Evan Afton", false)
-mod.Two_Character = addCharacter("William Afton", true)
+mod.WilliamAfton_Character = addCharacter("William Afton", true)
 
 function mod:evalCache(player, cacheFlag) -- this function applies all the stats the character gains/loses on a new run.
 	local function addStats(name, speed, tears, damage, range, shotspeed, luck, tearcolor, flying, tearflag) -- This is the function used to determine the stats of your character, you can simply leave it as you will use it later!
@@ -60,16 +59,16 @@ function mod:evalCache(player, cacheFlag) -- this function applies all the stats
 		end
 	end
 	mod.EvanAfton_Stats = addStats("Evan Afton", 0, 0, 0, 0, 0, 0, Color(1, 1, 1, 1.0, 0, 0, 0), false, TearFlags.TEAR_NORMAL)
-	mod.Two_Stats = addStats("William Afton", 0, 0, 0, 0, 0, 0, Color(1, 1, 1, 1.0, 0, 0, 0), false, TearFlags.TEAR_NORMAL)
+	mod.WilliamAfton_Stats = addStats("William Afton", 0, 0, 0, 0, 0, 0, Color(1, 1, 1, 1.0, 0, 0, 0), false, TearFlags.TEAR_NORMAL)
 end
 mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE,mod.evalCache)
 
-function mod:playerSpawn(player)
-    if player:GetPlayerType(mod.One_Character.NAME) then
-        player:AddNullCostume(mod.One_Character.Costume_ID)
+function mod:playerSpawn_EvanWilliam(player)
+    if player:GetName() == mod.EvanAfton_Character.NAME then
+        player:AddNullCostume(Isaac.GetCostumeIdByPath("gfx/characters/EvanAfton-head.anm2"))
     end
-    if player:GetPlayerType(mod.Two_Character.NAME) then
-        player:AddNullCostume(mod.Two_Character.Costume_ID)
+    if player:GetName() == mod.WilliamAfton_Character.NAME then
+        player:AddNullCostume(Isaac.GetCostumeIdByPath("gfx/characters/WilliamAfton-head.anm2"))
     end
 end
-mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, mod.playerSpawn)
+mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, mod.playerSpawn_EvanWilliam)
