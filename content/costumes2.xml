@@ -1,4 +1,7 @@
 <costumes anm2root="gfx/characters/">
 	<costume anm2path="EvanAfton-head.anm2" type="none"/>
+
+
 	<costume anm2path="WilliamAfton-head.anm2" type="none"/>
+	<costume anm2path="WilliamTransformation.anm2" type="none"/>
 </costumes>

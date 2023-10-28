@@ -4,6 +4,16 @@ local mod = RegisterMod("Evan & Wolliam Afton Character Mod", 1)
 local game = Game()
 local rng = RNG()
 
+mod.Items = {
+    puppetMask = Isaac.GetItemIdByName("Puppet Mask"),
+	goldfreddyMask = Isaac.GetItemIdByName("Golden Freddy Mask"),
+	springtrapMask = Isaac.GetItemIdByName("Springtrap Mask"),
+	batteryFlashlight = Isaac.GetItemIdByName("Battery-Powered Flashlight"),
+	foxyHook = Isaac.GetItemIdByName("Severed Hook"),
+}
+
+mod.ChildForms = nil
+
 --Stat Functions
 local function toTears(fireDelay) --thanks oat for the cool functions for calculating firerate!
 	return 30 / (fireDelay + 1)
@@ -50,8 +60,8 @@ function mod:evalCache(player, cacheFlag) -- this function applies all the stats
 			if cacheFlag == CacheFlag.CACHE_TEARCOLOR then
 				player.TearColor = tearcolor
 			end
-			if cacheFlag == CacheFlag.CACHE_FLYING and flying then
-				player.CanFly = true
+			if cacheFlag == CacheFlag.CACHE_FLYING then
+				player.CanFly = flying
 			end
 			if cacheFlag == CacheFlag.CACHE_TEARFLAG then
 				player.TearFlags = player.TearFlags | tearflag
@@ -60,15 +70,69 @@ function mod:evalCache(player, cacheFlag) -- this function applies all the stats
 	end
 	mod.EvanAfton_Stats = addStats("Evan Afton", 0, 0, 0, 0, 0, 0, Color(1, 1, 1, 1.0, 0, 0, 0), false, TearFlags.TEAR_NORMAL)
 	mod.WilliamAfton_Stats = addStats("William Afton", 0, 0, 0, 0, 0, 0, Color(1, 1, 1, 1.0, 0, 0, 0), false, TearFlags.TEAR_NORMAL)
+
+	if player:GetName() == mod.EvanAfton_Character.NAME then
+		if mod.ChildForms == "Evan" then
+			if cacheFlag == CacheFlag.CACHE_FLYING then
+				player.CanFly = false
+			end
+		elseif mod.ChildForms == "Freddy" then
+			if cacheFlag == CacheFlag.CACHE_FLYING then
+				player.CanFly = false
+			end
+		elseif mod.ChildForms == "Bonnie" then
+			if cacheFlag == CacheFlag.CACHE_FLYING then
+				player.CanFly = false
+			end
+		elseif mod.ChildForms == "Chica" then
+			if cacheFlag == CacheFlag.CACHE_FLYING then
+				player.CanFly = true
+			end
+		elseif mod.ChildForms == "Foxy" then
+			if cacheFlag == CacheFlag.CACHE_FLYING then
+				player.CanFly = false
+			end
+		end
+	end
 end
 mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE,mod.evalCache)
 
 function mod:playerSpawn_EvanWilliam(player)
     if player:GetName() == mod.EvanAfton_Character.NAME then
         player:AddNullCostume(Isaac.GetCostumeIdByPath("gfx/characters/EvanAfton-head.anm2"))
+		player:AddCollectible(CollectibleType.COLLECTIBLE_AQUARIUS, 0, true, 0, 0)
+		mod.ChildForms = "Evan" -- Evan
     end
     if player:GetName() == mod.WilliamAfton_Character.NAME then
         player:AddNullCostume(Isaac.GetCostumeIdByPath("gfx/characters/WilliamAfton-head.anm2"))
+		player:AddCollectible(CollectibleType.COLLECTIBLE_ANEMIC, 0, true, 0, 0)
+		player:RemoveCostume(Isaac.GetItemConfig():GetCollectible(CollectibleType.COLLECTIBLE_ANEMIC))
+		player:AddCollectible(CollectibleType.COLLECTIBLE_NIGHT_LIGHT, 0, true, 0, 0)
+		player:AddCollectible(CollectibleType.COLLECTIBLE_DADDY_LONGLEGS, 0, true, 0, 0)
     end
 end
 mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, mod.playerSpawn_EvanWilliam)
+
+local ChildFormEffects = {
+	FREDDY_EFKT = false,
+	BONNIE_EFKT = false,
+	CHICA_EFKT = false,
+	FOXY_EFKT = false,
+}
+
+function mod:Update(player)
+	if player:GetName() == mod.EvanAfton_Character.NAME then
+		if mod.ChildForms == "Freddy" then
+			if player:HasCollectible(CollectibleType.COLLECTIBLE_2SPOOKY) == false then
+				player:AddCollectible(CollectibleType.COLLECTIBLE_2SPOOKY, 0, true, 0, 0)
+				ChildFormEffects.FREDDY_EFKT = true
+			else
+				ChildFormEffects.FREDDY_EFKT = false
+			end
+		elseif ChildFormEffects.FREDDY_EFKT == true then
+			player:RemoveCollectible(CollectibleType.COLLECTIBLE_2SPOOKY, true)
+			ChildFormEffects.FREDDY_EFKT = false
+		end
+	end
+end
+mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, mod.Update)

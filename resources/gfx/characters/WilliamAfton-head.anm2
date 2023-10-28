@@ -1,5 +1,5 @@
 <AnimatedActor>
-	<Info CreatedBy="robot" CreatedOn="19/03/2023 17:05:33" Version="122" Fps="30"/>
+	<Info CreatedBy="robot" CreatedOn="28/10/2023 13:45:47" Version="121" Fps="30"/>
 	<Content>
 		<Spritesheets>
 			<Spritesheet Path="costumes\WilliamAfton-head.png" Id="0"/>

@@ -1,0 +1,9 @@
+<items gfxroot="gfx/items/" version="1">
+	<active id="1" name="Puppet Mask" description="Change form" gfx="puppetmask.png" maxcharges="4" quality="4"/>
+  <active id="2" name="Golden Freddy Mask" description="High damage to all enemies" gfx="goldenfreddy.png" maxcharges="4" quality="2"/>
+  <active id="3" name="Springtrap Mask" description="Change form" gfx="null.png" maxcharges="4" quality="2"/>
+  <active id="4" name="Battery-Powered Flashlight" description="This will come in handy." gfx="flashlight.png" maxcharges="4" quality="2"/>
+  <active id="5" name="Severed Hook" description="It's gonna hurt" gfx="hook.png" maxcharges="4" quality="2"/>
+  <active id="6" name="Bonnie's Guitar" description="Charming melodies" gfx="null.png" maxcharges="4" quality="2"/>
+  <passive id="7" name="The Parrot" description="Repeating friend" gfx="null.png" maxcharges="4" quality="2"/>
+</items>
