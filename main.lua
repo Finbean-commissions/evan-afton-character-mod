@@ -9,7 +9,11 @@ mod.Items = {
 	goldfreddyMask = Isaac.GetItemIdByName("Golden Freddy Mask"),
 	springtrapMask = Isaac.GetItemIdByName("Springtrap Mask"),
 	batteryFlashlight = Isaac.GetItemIdByName("Battery-Powered Flashlight"),
-	foxyHook = Isaac.GetItemIdByName("Severed Hook"),
+	foxyHook = Isaac.GetItemIdByName("Foxy's Hook"),
+	bonnieGuitar = Isaac.GetItemIdByName("Bonnie's Guitar"),
+	Parrot = Isaac.GetItemIdByName("The Parrot"),
+	letEat = Isaac.GetItemIdByName("Let's Eat"),
+	Cupcake = Isaac.GetItemIdByName("Cupcake"),
 }
 
 mod.ChildForms = nil
@@ -101,6 +105,7 @@ function mod:playerSpawn_EvanWilliam(player)
     if player:GetName() == mod.EvanAfton_Character.NAME then
         player:AddNullCostume(Isaac.GetCostumeIdByPath("gfx/characters/EvanAfton-head.anm2"))
 		player:AddCollectible(CollectibleType.COLLECTIBLE_AQUARIUS, 0, true, 0, 0)
+		player:SetPocketActiveItem(mod.Items.puppetMask, 2, true)
 		mod.ChildForms = "Evan" -- Evan
     end
     if player:GetName() == mod.WilliamAfton_Character.NAME then
@@ -113,6 +118,33 @@ function mod:playerSpawn_EvanWilliam(player)
 end
 mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, mod.playerSpawn_EvanWilliam)
 
+function mod:UseItem(item, _, player, UseFlags, Slot, _)
+	if UseFlags & UseFlag.USE_OWNED == UseFlag.USE_OWNED then
+		--Puppet Mask
+		if item == mod.Items.puppetMask then
+			if player:GetName() == mod.EvanAfton_Character.NAME then
+				if mod.ChildForms == "Evan" or mod.ChildForms == "Evan" == nil then
+					mod.ChildForms = "Freddy"
+				elseif mod.ChildForms == "Freddy" then
+					mod.ChildForms = "Bonnie"
+				elseif mod.ChildForms == "Bonnie" then
+					mod.ChildForms = "Chica"
+				elseif mod.ChildForms == "Chica" then
+					mod.ChildForms = "Foxy"
+				elseif mod.ChildForms == "Foxy" then
+					mod.ChildForms = "Evan"
+				end
+				player:AddCacheFlags(CacheFlag.CACHE_ALL)
+				player:EvaluateItems()
+			else
+				player:AddCollectible(mod.Items.batteryFlashlight, 0, true, 0, 0)
+			end
+
+		end
+    end
+end
+mod:AddCallback(ModCallbacks.MC_USE_ITEM, mod.UseItem)
+
 local ChildFormEffects = {
 	FREDDY_EFKT = false,
 	BONNIE_EFKT = false,
@@ -123,15 +155,59 @@ local ChildFormEffects = {
 function mod:Update(player)
 	if player:GetName() == mod.EvanAfton_Character.NAME then
 		if mod.ChildForms == "Freddy" then
-			if player:HasCollectible(CollectibleType.COLLECTIBLE_2SPOOKY) == false then
+			if player:HasCollectible(CollectibleType.COLLECTIBLE_2SPOOKY) == false or player:HasCollectible(mod.Items.goldfreddyMask) == false then
 				player:AddCollectible(CollectibleType.COLLECTIBLE_2SPOOKY, 0, true, 0, 0)
+				player:RemoveCostume(Isaac.GetItemConfig():GetCollectible(CollectibleType.COLLECTIBLE_2SPOOKY))
+				player:AddCollectible(mod.Items.goldfreddyMask, 0, true, 0, 0)
 				ChildFormEffects.FREDDY_EFKT = true
+				player:AddNullCostume(Isaac.GetCostumeIdByPath("gfx/characters/freddy.anm2"))
 			else
 				ChildFormEffects.FREDDY_EFKT = false
 			end
-		elseif ChildFormEffects.FREDDY_EFKT == true then
+		elseif mod.ChildForms ~= "Freddy" then
 			player:RemoveCollectible(CollectibleType.COLLECTIBLE_2SPOOKY, true)
+			player:RemoveCollectible(mod.Items.goldfreddyMask, true)
 			ChildFormEffects.FREDDY_EFKT = false
+			player:TryRemoveNullCostume(Isaac.GetCostumeIdByPath("gfx/characters/freddy.anm2"))
+		end
+		if mod.ChildForms == "Bonnie" then
+			if player:HasCollectible(mod.Items.bonnieGuitar) == false then
+				player:AddCollectible(mod.Items.bonnieGuitar, 0, true, 0, 0)
+				ChildFormEffects.BONNIE_EFKT = true
+				player:AddNullCostume(Isaac.GetCostumeIdByPath("gfx/characters/bonnie.anm2"))
+			else
+				ChildFormEffects.BONNIE_EFKT = false
+			end
+		elseif mod.ChildForms ~= "Bonnie" then
+			player:RemoveCollectible(mod.Items.bonnieGuitar, true)
+			ChildFormEffects.BONNIE_EFKT = false
+			player:TryRemoveNullCostume(Isaac.GetCostumeIdByPath("gfx/characters/bonnie.anm2"))
+		end
+		if mod.ChildForms == "Chica" then
+			if player:HasCollectible(mod.Items.Cupcake) == false or player:HasCollectible(mod.Items.letEat) == false then
+				player:AddCollectible(mod.Items.Cupcake, 0, true, 0, 0)
+				player:AddCollectible(mod.Items.letEat, 0, true, 0, 0)
+				ChildFormEffects.CHICA_EFKT = true
+			else
+				ChildFormEffects.CHICA_EFKT = false
+			end
+		elseif mod.ChildForms ~= "Chica" then
+			player:RemoveCollectible(mod.Items.Cupcake, true)
+			player:RemoveCollectible(mod.Items.letEat, true)
+			ChildFormEffects.CHICA_EFKT = false
+		end
+		if mod.ChildForms == "Foxy" then
+			if player:HasCollectible(mod.Items.foxyHook) == false or player:HasCollectible(mod.Items.Parrot) == false then
+				player:AddCollectible(mod.Items.foxyHook, 0, true, 0, 0)
+				player:AddCollectible(mod.Items.Parrot, 0, true, 0, 0)
+				ChildFormEffects.FOXY_EFKT = true
+			else
+				ChildFormEffects.FOXY_EFKT = false
+			end
+		elseif mod.ChildForms ~= "Foxy" then
+			player:RemoveCollectible(mod.Items.foxyHook, true)
+			player:RemoveCollectible(mod.Items.Parrot, true)
+			ChildFormEffects.FOXY_EFKT = false
 		end
 	end
 end
